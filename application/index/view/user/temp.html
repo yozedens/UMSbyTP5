@@ -1,0 +1,72 @@
+<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>管理员：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+
+			{eq name="$user_info.name" value="admin"} <!--如果用户名是admin,不允许修改-->
+			<input  type="text" class="input-text disabled" value="{$user_info.name}" placeholder="" id="name" name="name">
+			{else /}
+			{eq name="$Think.session.user_info.name" value="$user_info.name" }
+			<input  type="text" class="input-text disabled" value="{$user_info.name}" placeholder="" id="name" name="name">
+			{else /}
+			<input  type="text" class="input-text" value="{$user_info.name}" placeholder="" id="name" name="name">
+			{/eq}
+			{/eq}
+
+		</div>
+	</div>
+
+<div class="row cl">
+							<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>新密码：</label>
+							<div class="formControls col-xs-8 col-sm-9">
+								<input type="password" class="input-text" autocomplete="off" value="{$user_info.password}"  placeholder="密码为6位" id="password" name="password">
+							</div>
+						</div>
+				
+				
+						{eq name="$Think.session.user_info.name" value="admin"}
+						<div class="row cl">
+							<label class="form-label col-xs-4 col-sm-3">在线状态：</label>
+							<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
+								<select class="select" name="status" size="1">
+				
+									<option value="1" >在线</option>
+									<option value="0" selected>下线</option>
+				
+								</select>
+								</span>
+							</div>
+						</div>
+						{/eq}
+				
+						<div class="row cl">
+							<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>邮箱：</label>
+							<div class="formControls col-xs-8 col-sm-9">
+								<input type="text" class="input-text" placeholder="@" name="email" id="email" value="{$user_info.email}">
+							</div>
+						</div>
+				
+				
+						{eq name="$Think.session.user_info.name" value="admin"}
+						<div class="row cl">
+							<label class="form-label col-xs-4 col-sm-3">用户类别：</label>
+							<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
+								<select class="select" name="category" size="1">
+									<option value="01" >超级管理员</option>
+									<option value="1" selected>管理员</option>
+									<option value="10" >重要用户</option>
+									<option value="11" >普通用户</option>
+									<option value="12" >标黑用户</option>
+								</select>
+								</span>
+							</div>
+						</div>
+						{/eq}
+				
+						<!--将当前记录的id做为隐藏域发送到服务器-->
+						<input type="hidden" value="{$user_info.id}" name="id">
+				
+						<div class="row cl">
+							<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+								<input class="btn btn-primary radius disabled" type="button" value="&nbsp;&nbsp;提交&nbsp;&nbsp;" id="submit" >
+							</div>
+						</div>

@@ -25,7 +25,7 @@ class Base extends Controller
     //防止用户重新登录，放在user/login
     protected function alreadyLogin()
     {
-        //其实一下逻辑是只能允许一个用户登录，因为没有判断USER_ID的具体值，即没有区分用户
+        //其实以下逻辑是只能允许一个用户登录，因为没有判断USER_NAME的具体值，即没有区分用户
         if(USER_NAME)
         {
             $this->error('用户已经登录，请勿重新登录','index/index');

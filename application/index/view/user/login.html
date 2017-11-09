@@ -17,7 +17,7 @@
 <!--[if IE 6]>
 <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script><![endif]-->
-<title>用户管理系统</title>
+<title>{$title|default='网页标题'}</title>
 <meta name="keywords" content="{$keywords|default='关键字'}">
 <meta name="description" content="{$desc|default='描述'}">
 </head>
@@ -62,7 +62,7 @@
 		</form>
 	</div>
 </div>
-<div class="footer">Copyright 东方晨旭 by yuzudeng</div>
+<div class="footer">Copyright {$copyright|default="版权信息"}</div>
 
 <script type="text/javascript" src="__STATIC__/lib/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="__STATIC__/static/h-ui/js/H-ui.js"></script>
