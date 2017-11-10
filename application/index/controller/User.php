@@ -104,7 +104,7 @@ class User extends Base
             }
 
         }
-
+        //这个'data'=>$data返回值好像没有用到？！！
         return ['status'=>$status,'message'=>$result,'data'=>$data];
     }
     //退出登录
@@ -203,5 +203,89 @@ class User extends Base
          $this->view->assign('keywords',' ');
          $this->view->assign('desc',' ');
          return $this->view->fetch('admin_add');
+     }
+     //添加用户操作
+     public function addUser(Request $request)
+     {
+        $data = $request->param();
+        $status = 0;
+        $result = '';
+
+        $rule = [
+            'name|用户名' => "require|min:3|max:16",
+            'pwd|密码' => "require|min:3|max:32",
+            'idcard|身份证号' =>'require|min:18|max:18',
+            'email|邮箱' =>'require|email'
+        ]; //下次修改可加入正则表达式的验证条件
+
+        //自定义验证失败时的提示信息
+        $msg =[
+            'name'=>[
+                'require'=>'用户名不能为空，请检查',
+                'min' => '用户名最短为3位',
+                'max' => '用户名最长为16位'
+                ], //键为验证规则，值为对应的规则验证失败时的提示信息
+            'pwd'=>[
+                'require'=>'密码不能为空，请检查',
+                'min' => '密码最短为3位',
+                'max' => '密码最长为32位'
+                ],
+            'idcard'=>[
+                'require'=>'身份证号不能为空，请检查',
+                'min' => '身份证号应为18位',
+                'max' => '身份证号应为18位'
+                ],
+            'email'=>[
+                'require'=>'邮箱不能为空，请检查',
+                'email'=>'邮箱格式错误，请检查']
+        ];
+
+        $result = $this -> validate($data, $rule, $msg);
+
+        if($result === true){
+            //创建数据，其中密码会用修改器加密
+            $user = UserModel::create($request->param());
+            if($user === null){
+                $result = '添加失败';
+            }else{
+                $status = 1;
+                $result = '添加成功';
+            }
+        }
+
+        return ['status'=>$status, 'message'=>$result];
+     }
+
+     public function checkUserName(Request $request)
+     {
+        $username = trim($request->param('name'));
+        $status = 1;
+        $message = '用户名未被使用';
+
+        if(UserModel::get(['name'=>$username])){
+            $status = 0;
+            $message = '用户名已被使用，请重新输入';
+        }
+
+        return ['status'=>$status,'message'=>$message];
+     }
+
+
+     public function checkUserEmail(Request $request)
+     {
+        $email = trim($request->param('email'));
+        if($email == null)
+        {
+            return ['status'=>2,'message'=>'身份证号为空'];
+        }
+        $status = 1;
+        $message = '邮箱未被使用';
+
+        if(UserModel::get(['email'=>$email])){
+            $status = 0;
+            $message = '邮箱已被使用，请重新输入';
+        }
+
+        return ['status'=>$status,'message'=>$message];
      }
 }

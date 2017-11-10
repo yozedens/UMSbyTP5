@@ -7,10 +7,10 @@
 
 <body>
         <article class="cl pd-20">
-                <form action="" method="post" class="form form-horizontal" id="form-admin-edit">
+                <form action="" method="post" class="form form-horizontal" id="form-admin-add">
                     <div class="row cl">
                         <label class="form-label col-xs-4 col-sm-3">
-                            <span class="c-red">*</span>管理员：</label>
+                            <span class="c-red">*</span>用户名：</label>
                         <div class="formControls col-xs-8 col-sm-9">
                             <input type="text" class="input-text" value="" placeholder="" id="name" name="name"> 
                         </div>
@@ -32,7 +32,7 @@
                     </div>
                     <div class="row cl">
                         <label class="form-label col-xs-4 col-sm-3">
-                            <span class="c-red"></span>身份证号：</label>
+                            <span class="c-red">*</span>身份证号：</label>
                         <div class="formControls col-xs-8 col-sm-9">
                             <input type="text" class="input-text" autocomplete="off" value="" placeholder="身份证号" id="idcard" name="idcard">
                         </div>
@@ -53,14 +53,12 @@
                                     <option id="0" value="0">超级管理员</option>
                                     <option id="1" value="1" >管理员</option>
                                     <option id="10" value="10">重要用户</option>
-                                    <option id="11" value="11">普通用户</option>
+                                    <option id="11" value="11" selected>普通用户</option>
                                     <option id="12" value="12">标黑用户</option>
                                 </select>
                             </span>
                         </div>
                     </div>
-                    <!--将当前记录的id做为隐藏域发送到服务器-->
-                    <input type="hidden" value="" name="id">
         
                     <div class="row cl">
                         <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
@@ -76,6 +74,69 @@
 <script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
 <script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script>
 <script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+
+<script>
+    
+        $(function(){
+    
+            //防止用户无更新提交,只有表中数据有变化时才允许提交
+            $("form").children().change(function(){
+                $("#submit").removeClass('disabled');
+            });
+    
+            //失去焦点时,检查用户名是否重复
+            $("#name").blur(function(){
+                $.ajax({
+                    type: 'GET',
+                    url: "checkUserName",
+                   data:{name:$(this).val()},
+                    dataType: 'json',
+                    success: function(data){
+                        if (data.status == 1) {  //若没有弹窗提示以外的其他操作，不需要区分返回状态
+                            alert(data.message);
+                        } else {
+                            alert(data.message);
+                        }
+                    }
+                });
+            });
+            
+
+            //失去焦点时,检查邮箱是否重复
+            $("#email").blur(function(){
+                $.ajax({
+                    type: 'GET',
+                    url: "checkUserEmail",
+                    data:{email:$(this).val()},
+                    dataType: 'json',
+                    success: function(data){
+                        if (data.status == 1 || data.status == 0) {
+                            alert(data.message);
+                        }
+                    }
+                });
+            });
+    
+            $("#submit").on("click", function(event){
+                $.ajax({
+                    type: "POST",
+                    url: "{:url('user/addUser')}",
+                    data: $("#form-admin-add").serialize(),
+                    dataType: "json",
+                    success: function(data){
+                        if (data.status == 1) {
+                            alert(data.message);
+    
+                        } else {
+                            alert(data.message);
+    
+                        }
+                    }
+                });
+    
+            })
+        })
+    </script>
 
 
 </body>

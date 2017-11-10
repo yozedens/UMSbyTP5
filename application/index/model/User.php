@@ -14,7 +14,11 @@ class User extends Model
             0=>'未在线',
             1=>'已在线'
         ];
-        return $is_online[$value];
+        if(isset($is_online[$value])){
+            return $is_online[$value];
+        }else{
+            return "--";
+        }
     }
 
     //数据表中用户类别字段:category返回值处理
@@ -27,15 +31,29 @@ class User extends Model
             11=>'普通用户',
             12=>'标黑用户'
         ];
-        return $category[$value];
+        if(isset($category[$value])){
+            return $category[$value];
+        }else{
+            return "--";
+        }
     }
-    //在线状态字段:is_online返回值处理
-    public function getIs_onlineAttr($value)
+    //性别字段:sex返回值处理
+    public function getSexAttr($value)
     {
-        $is_online = [
-            0=>'未在线',
-            1=>'已在线'
+        $sex = [
+            'm'=>'男',
+            'f'=>'女',
         ];
-        return $is_online[$value];
+        if(isset($sex[$value])){
+            return $sex[$value];
+        }else{
+            return "--";
+        }
+    }
+
+    //密码修改器
+    public function setPwdAttr($value)
+    {
+        return md5($value);
     }
 }
