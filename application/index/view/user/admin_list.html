@@ -80,7 +80,7 @@
 							{/if}
 							{/eq}
 							
-							<a title="编辑" href="javascript:;" onclick="admin_edit('管理员编辑','{:url("user/adminEdit",["id"=>$vo["id"]])}','1','800','500')" class="ml-5" style="text-decoration:none">
+							<a title="编辑" href="javascript:;" onclick="admin_edit('管理员编辑','{:url("user/adminEdit",["id"=>$vo["id"]])}','800','500')" class="ml-5" style="text-decoration:none">
 								<i class="Hui-iconfont">&#xe6df;</i>
 							</a>
 							{eq name="$Think.session.user_info.category" value="0"}
@@ -120,8 +120,8 @@ function datadel(){
 	});
 }
 /*用户-编辑*/
-function admin_edit(title,url,id,w,h){
-    $.get(url,{id:id}); //执行控制器中的编辑操作
+function admin_edit(title,url,w,h){
+    $.get(url); //用get方式请求url脚本进行处理
 	layer_show(title,url,w,h);
 }
 

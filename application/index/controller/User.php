@@ -158,7 +158,7 @@ class User extends Base
     //渲染编辑管理员界面
     public function adminEdit(Request $request)
     {
-        $user_id = $request -> param('id');
+        $user_id = $request -> param('id');  //这里的request获取的请求数据就是$.get请求中的数据
         $result = UserModel::get($user_id);
         $this->view->assign('title','编辑用户信息');
         $this->view->assign('keywords','esunrising.com');
