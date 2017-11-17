@@ -69,10 +69,10 @@ class User extends Base
 
                 $user_info = $user->getData(); //用户所有信息
                 //若需改变逻辑为不允许同一用户重复登录而允许不同用户同时登录，可开启下一代码块并屏蔽login方法中相关操作
-                /* if($user_info['is_online']){
+                if($user_info['is_online']){
                     $result = '该用户已在别处登录或上次登录未正常注销，请重试或联系管理员';
-                    break;
-                } */
+                    return ['status'=>$status,'message'=>$result,'data'=>$data];
+                }
                 $status = 1;
                 $result = '验证通过，点击[确定]进入';
                 //改变在线状态
@@ -174,7 +174,7 @@ class User extends Base
         $param = $request -> param();
         //什么情况下提交的表单项为空？
         foreach ($param as $key => $value) {
-            if (!empty($value)) {
+            if (!empty($value)) {   //判断该项的值不为空
                 $data[$key] = $value;
             }
         }
@@ -212,9 +212,10 @@ class User extends Base
         $result = '';
 
         $rule = [
-            'name|用户名' => "require|min:3|max:16",
-            'pwd|密码' => "require|min:3|max:32",
-            'idcard|身份证号' =>'require|min:18|max:18',
+            'name|用户名' => 'require|regex:/^[a-zA-Z_][\w_]{2,15}$/',
+            //密码项的正则表达式的效果是清楚的，但不是很懂?!的使用
+            'pwd|密码' => 'require|regex:/^(?![0-9]+$)(?![a-zA-Z]+$)\S{6,16}$/',
+            'idcard|身份证号' =>['require','regex'=>'/^(\d{18}|\d{17}X)$/'],
             'email|邮箱' =>'require|email'
         ]; //下次修改可加入正则表达式的验证条件
 
@@ -222,18 +223,15 @@ class User extends Base
         $msg =[
             'name'=>[
                 'require'=>'用户名不能为空，请检查',
-                'min' => '用户名最短为3位',
-                'max' => '用户名最长为16位'
+                'regex'=>'用户名格式错误！3-16位字母数字下划线组合，且不能以数字开头'
                 ], //键为验证规则，值为对应的规则验证失败时的提示信息
             'pwd'=>[
                 'require'=>'密码不能为空，请检查',
-                'min' => '密码最短为3位',
-                'max' => '密码最长为32位'
+                'regex'=>'密码格式错误！6-16位字母数字半角特殊字符组合，且必须包含字母和数字'
                 ],
             'idcard'=>[
                 'require'=>'身份证号不能为空，请检查',
-                'min' => '身份证号应为18位',
-                'max' => '身份证号应为18位'
+                'regex'=>'身份证号格式错误！18位数字或17位数字后跟X'
                 ],
             'email'=>[
                 'require'=>'邮箱不能为空，请检查',
@@ -243,7 +241,7 @@ class User extends Base
         $result = $this -> validate($data, $rule, $msg);
 
         if($result === true){
-            //创建数据，其中密码会用修改器加密
+            //创建数据，其中密码会自动调用修改器加密
             $user = UserModel::create($request->param());
             if($user === null){
                 $result = '添加失败';
@@ -260,7 +258,7 @@ class User extends Base
      {
         $username = trim($request->param('name'));
         $status = 1;
-        $message = '用户名未被使用';
+        $message = '';
 
         if(UserModel::get(['name'=>$username])){
             $status = 0;
@@ -274,12 +272,8 @@ class User extends Base
      public function checkUserEmail(Request $request)
      {
         $email = trim($request->param('email'));
-        if($email == null)
-        {
-            return ['status'=>2,'message'=>'身份证号为空'];
-        }
         $status = 1;
-        $message = '邮箱未被使用';
+        $message = '';
 
         if(UserModel::get(['email'=>$email])){
             $status = 0;

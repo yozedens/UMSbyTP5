@@ -23,19 +23,18 @@
 					<input type="text" class="input-text" value="{$user_info.name}" placeholder="" id="name" name="name"> 
 					{/eq} 
 					{/eq}
-
 				</div>
 			</div>
 			<div class="row cl">
 				<label class="form-label col-xs-4 col-sm-3">
 					<span class="c-red">*</span>新密码：</label>
 				<div class="formControls col-xs-8 col-sm-9">
-					<input type="password" class="input-text" autocomplete="off" value="" placeholder="密码提示" id="pwd" name="pwd">
+					<input type="password" class="input-text" autocomplete="off" value="" placeholder="请输入新密码" id="pwd" name="pwd">
 				</div>
 			</div>
 			<div class="row cl">
 					<label class="form-label col-xs-4 col-sm-3">
-						<span class="c-red">*</span>性别：</label>
+					<span class="c-red">*</span>性别：</label>
 					<div class="formControls col-xs-8 col-sm-9">
 						男<input type="radio" class=" "  value="m" id="sex_m" name="sex">&nbsp;&nbsp;
 						女<input type="radio" class=" "  value="f" id="sex_f" name="sex">
@@ -48,27 +47,7 @@
 					<input type="text" class="input-text" autocomplete="off" value="{$user_info.idcard}" placeholder="身份证号" id="idcard" name="idcard">
 				</div>
 			</div>
-			<!-- 管理员才能更在在线状态 -->
-			{eq name="$Think.session.user_info.name" value="admin"}
-			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-3">在线状态：</label>
-				<div class="formControls col-xs-8 col-sm-9">
-					<span class="select-box" style="width:150px;">
-						<select class="select" name="isOnline" size="1">
-							{if condition="$user_info.is_online eq '1'"}
-							<option value="1" selected>已在线</option>
-							<option value="0" >未在线</option>
-							{else /}
-							<option value="1" >已在线</option>
-							<option value="0" selected>未在线</option>
-							{/if}
-							<!-- <option value="1" id="online1">已在线</option>
-							<option value="0" id="online0">未在线</option> -->
-						</select>
-					</span>
-				</div>
-			</div>
-			{/eq}
+			
 			<div class="row cl">
 				<label class="form-label col-xs-4 col-sm-3">
 					<span class="c-red">*</span>邮箱：</label>
@@ -77,7 +56,15 @@
 				</div>
 			</div>
 
-			<!-- 只有超级管理员才能更改用户角色 -->
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3">
+					<span class="c-red"></span>联系地址：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" placeholder="" name="addr" id="addr" value="{$user_info.addr}">
+				</div>
+			</div>
+
+			<!-- 只有超级管理员才能更改用户类别和在线状态 -->
 			{eq name="$Think.session.user_info.name" value="admin"}
 			<div class="row cl">
 				<label class="form-label col-xs-4 col-sm-3">用户类别：</label>
@@ -89,6 +76,20 @@
 							<option id="10" value="10">重要用户</option>
 							<option id="11" value="11">普通用户</option>
 							<option id="12" value="12">标黑用户</option>
+						</select>
+					</span>
+				</div>
+			</div>
+
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3">在线状态：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<span class="select-box" style="width:150px;">
+						<select class="select" id="is_online" name="is_online" size="1">
+							<option id="onlineyes" value="1" >已在线</option>
+							<option id="onlineno" value="0" >未在线</option>
+							<!-- <option value="1" id="online1">已在线</option>
+							<option value="0" id="online0">未在线</option> -->
 						</select>
 					</span>
 				</div>
@@ -130,6 +131,9 @@
 							alert(data.message);
 						}
 					}
+					/* ,error:function (data){
+						alert(data.message);
+					} */
 				});
 
 			})
@@ -140,7 +144,13 @@
 			//$("#online{$user_info.is_online}").attr('selected',true);
 			$("#sex_{$user_info.sex}").attr('checked',true);
 			$("#{$user_info.category}").attr('selected',true);
-			
+			if("{$user_info.is_online}" == "0"){
+				//alert("{$user_info.is_online}"+": is not online");
+				$("#onlineno").attr('selected',true);
+			}else{
+				//alert("{$user_info.is_online}"+": is online");
+				$("#onlineyes").attr('selected',true);
+			}
 		})
 	</script>
 

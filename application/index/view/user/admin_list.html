@@ -35,8 +35,9 @@
 							<th scope="col" colspan="11">信息列表</th>
 						</tr>
 						<tr class="text-c">
+							<!-- 全选操作实现在static/h-ui/js/H-ui.js中4911行的函数操作中，通过table标签的class来附加的 -->
 							<th width="25"><input type="checkbox" name="" value=""></th>
-							<th width="60">头像</th>
+							<!-- <th width="60">头像</th> -->
 							<th width="40">ID</th>
 							<th width="60">用户名</th>
 							<th width="40">性别</th>
@@ -51,11 +52,11 @@
 					<tbody>
 	
 					<!-- 循环输出标签 -->
-					<!-- Volist标签的name属性表示模板赋值的变量名称，因此不可随意在模板文件中改变。id表示当前的循环变量，可以随意指定，但确保不要和name属性冲突 -->
+					<!-- Volist标签的name属性“list”表示模板赋值的变量名称，因此不可随意在模板文件中改变。id属性“vo”表示当前的循环变量，可以随意指定，但确保不要和name属性冲突 -->
 					{volist name="list" id="vo"}
 					<tr class="text-c">
-						<td><input type="checkbox" name="" value="{$vo.id}" name=""></td>
-						<td>{$vo.img}</td>
+						<td><input type="checkbox" name="checkbox[]" value="{$vo.id}"></td>
+						<!-- <td>{$vo.img}</td> -->
 						<td>{$vo.id}</td>
 						<td>{$vo.name}</td>
 						<td>{$vo.sex}</td>
@@ -74,6 +75,7 @@
 							<!-- 只允许超级管理员有权改变在线状态 -->
 							{eq name="$Think.session.user_info.category" value="0"}
 							{if condition="$vo.is_online eq '已在线'"}
+							<!-- this指触发事件的本标签 -->
 							<a style="text-decoration:none" onClick="admin_logout(this,{$vo.id})" href="javascript:;" title="下线"><i class="Hui-iconfont">&#xe631;</i></a> 
 							{else /}
 							<a style="text-decoration:none" onClick="admin_login(this,{$vo.id})" href="javascript:;" title="上线"><i class="Hui-iconfont">&#xe615;</i></a> 
@@ -114,9 +116,13 @@ function admin_add(title,url,w,h){
 
 function datadel(){
 	layer.confirm('确认要删除所有勾选的用户吗？',function(index){
-		$(".input:checkbox").each(function(){
-
+		//在input checkbox中循环操作所有checked了的，具体操作和删除单个的相同//因为不需要弹出提示框
+		$("input[name='checkbox[]']:checkbox:checked").each(function () {
+			$.get("{:url('user/deleteUser')}",{id:$(this).val()});
+			$(this).parents("tr").remove();
+			//alert($(this).val());
 		});
+		
 	});
 }
 /*用户-编辑*/
@@ -130,7 +136,7 @@ function admin_edit(title,url,w,h){
 function admin_del(obj,id){
 	layer.confirm('确认要删除吗？',function(index){
 		//此处请求后台程序，下方是成功后的前台处理……
-		$.get("{:url('user/deleteUser')}",{id:id})
+		$.get("{:url('user/deleteUser')}",{id:id});
 		
 		$(obj).parents("tr").remove();
 		layer.msg('已删除!',{icon:1,time:1000});

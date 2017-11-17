@@ -89,12 +89,10 @@
                 $.ajax({
                     type: 'GET',
                     url: "checkUserName",
-                   data:{name:$(this).val()},
+                    data:{name:$(this).val()},
                     dataType: 'json',
                     success: function(data){
-                        if (data.status == 1) {  //若没有弹窗提示以外的其他操作，不需要区分返回状态
-                            alert(data.message);
-                        } else {
+                        if (data.status == 0) {  //只在发生异常时弹出提示
                             alert(data.message);
                         }
                     }
@@ -110,7 +108,7 @@
                     data:{email:$(this).val()},
                     dataType: 'json',
                     success: function(data){
-                        if (data.status == 1 || data.status == 0) {
+                        if (data.status == 0) {  //只在发生异常时弹出提示
                             alert(data.message);
                         }
                     }

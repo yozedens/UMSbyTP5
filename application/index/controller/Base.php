@@ -28,7 +28,7 @@ class Base extends Controller
         //其实以下逻辑是只能允许一个用户登录，因为没有判断USER_NAME的具体值，即没有区分用户
         if(USER_NAME)
         {
-            $this->error('用户已经登录，请勿重新登录','index/index');
+            $this->error('已有用户'.USER_NAME.'登录，请勿重新登录','index/index');
         }
     }
 }
